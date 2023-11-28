@@ -1,12 +1,12 @@
 {
-  "name": "ghoneycutt-puppet",
-  "version": "3.3.0",
-  "author": "ghoneycutt",
+  "name": "kodguru-puppet",
+  "version": "4.0.0-forked",
+  "author": "kodguru",
   "summary": "Manages Puppet agent and puppetserver",
   "license": "Apache-2.0",
-  "source": "git://github.com/ghoneycutt/puppet-module-puppet.git",
-  "project_page": "https://github.com/ghoneycutt/puppet-module-puppet",
-  "issues_url": "https://github.com/ghoneycutt/puppet-module-puppet/issues",
+  "source": "git://github.com/kodguru/puppet-module-puppet.git",
+  "project_page": "https://github.com/kodguru/puppet-module-puppet",
+  "issues_url": "https://github.com/kodguru/puppet-module-puppet/issues",
   "dependencies": [
     {
       "name": "puppetlabs/cron_core",
