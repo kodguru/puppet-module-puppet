@@ -6,5 +6,3 @@ fixtures:
       repo: 'https://github.com/puppetlabs/puppetlabs-inifile.git'
     stdlib:
       repo: 'https://github.com/puppetlabs/puppetlabs-stdlib.git'
-  symlinks:
-    puppet: "#{source_dir}"
