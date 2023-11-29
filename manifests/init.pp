@@ -55,15 +55,15 @@
 #   The name of the puppet server.
 #
 class puppet (
-  String               $certname             = $facts['networking']['fqdn'],
+  Stdlib::Fqdn         $certname             = $facts['networking']['fqdn'],
   Boolean              $run_every_thirty     = true,
   Boolean              $run_in_noop          = true,
   String               $cron_command         = '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay', #lint:ignore:140chars
   Boolean              $run_at_boot          = true,
   Stdlib::Absolutepath $config_path          = '/etc/puppetlabs/puppet/puppet.conf',
-  String               $server               = 'puppet',
-  String               $ca_server            = 'puppet',
-  String               $env                  = $environment,
+  String[1]            $server               = 'puppet',
+  String[1]            $ca_server            = 'puppet',
+  String[1]            $env                  = $environment,
   Boolean              $graph                = false,
   Stdlib::Absolutepath $agent_sysconfig_path = '/etc/sysconfig/puppet',
   Hash                 $custom_settings      = {},

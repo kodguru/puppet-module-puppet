@@ -31,7 +31,7 @@ class puppet::server (
   Stdlib::Absolutepath             $sysconfig_path = '/etc/sysconfig/puppetserver',
   Pattern[/^\d+(m|g)$/]            $memory_size = '2g', # only m and g are appropriate for unit
   Optional[Stdlib::Absolutepath]   $enc = undef,
-  Optional[String]                 $dns_alt_names = undef,
+  Optional[String[1]]              $dns_alt_names = undef,
 ) {
   include puppet
 
