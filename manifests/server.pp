@@ -26,12 +26,12 @@
 #   The absolute path to the puppetserver sysconfig file.
 #
 class puppet::server (
-  Boolean                          $ca = false,
-  Variant[Array[String, 1], Undef] $autosign_entries = undef,
-  Stdlib::Absolutepath             $sysconfig_path = '/etc/sysconfig/puppetserver',
-  Pattern[/^\d+(m|g)$/]            $memory_size = '2g', # only m and g are appropriate for unit
-  Optional[Stdlib::Absolutepath]   $enc = undef,
-  Optional[String[1]]              $dns_alt_names = undef,
+  Boolean                          $ca               = false,
+  Array                            $autosign_entries = [],
+  Stdlib::Absolutepath             $sysconfig_path   = '/etc/sysconfig/puppetserver',
+  Pattern[/^\d+(m|g)$/]            $memory_size      = '2g', # only m and g are appropriate for unit
+  Optional[Stdlib::Absolutepath]   $enc              = undef,
+  Optional[String[1]]              $dns_alt_names    = undef,
 ) {
   include puppet
 
@@ -44,36 +44,31 @@ class puppet::server (
   }
 
   $non_conditional_ini_settings = {
-    'vardir'  => { setting => 'vardir', value => '/opt/puppetlabs/server/data/puppetserver' },
-    'logdir'  => { setting => 'logdir', value => '/var/log/puppetlabs/puppetserver' },
-    'rundir'  => { setting => 'rundir', value => '/var/run/puppetlabs/puppetserver' },
+    'vardir'  => { setting => 'vardir',  value => '/opt/puppetlabs/server/data/puppetserver' },
+    'logdir'  => { setting => 'logdir',  value => '/var/log/puppetlabs/puppetserver' },
+    'rundir'  => { setting => 'rundir',  value => '/var/run/puppetlabs/puppetserver' },
     'pidfile' => { setting => 'pidfile', value => '/var/run/puppetlabs/puppetserver/puppetserver.pid' },
     'codedir' => { setting => 'codedir', value => '/etc/puppetlabs/code' },
-    'ca'      => { setting => 'ca', value => $ca },
+    'ca'      => { setting => 'ca',      value => $ca },
   }
+  create_resources('ini_setting', $non_conditional_ini_settings, $ini_defaults)
 
-  if $enc != undef {
+  if $enc.empty == false {
     $ini_enc_settings = {
-      'node_terminus'  => { setting => 'node_terminus', value => 'exec' },
+      'node_terminus'  => { setting => 'node_terminus',  value => 'exec' },
       'external_nodes' => { setting => 'external_nodes', value => $enc },
     }
-  } else {
-    $ini_enc_settings = {}
+    create_resources('ini_setting', $ini_enc_settings, $ini_defaults)
   }
 
-  if $dns_alt_names != undef {
+  if $dns_alt_names.empty == false {
     $ini_dns_alt_names_settings = {
       'dns_alt_names' => { setting => 'dns_alt_names', value => $dns_alt_names },
     }
-  } else {
-    $ini_dns_alt_names_settings = {}
+    create_resources('ini_setting', $ini_dns_alt_names_settings, $ini_defaults)
   }
 
-  $ini_settings_merged = $non_conditional_ini_settings + $ini_enc_settings + $ini_dns_alt_names_settings
-  create_resources('ini_setting', $ini_settings_merged, $ini_defaults)
-
-  # Ensure that puppet.conf settings in [main] also trigger a restart of
-  # puppetserver
+  # Ensure that puppet.conf settings in [main] also trigger a restart of puppetserver
   Ini_setting <| tag == 'puppet' and section == 'main' |> ~> Service['puppetserver']
 
   file { 'puppetserver_sysconfig':

@@ -203,9 +203,9 @@ describe 'puppet::server' do
       },
       'non-empty array of strings' => {
         name:    ['autosign_entries'],
-        valid:   [['array with one string'], ['array', 'with', 'many', 'strings']],
-        invalid: [[], [1, 'not_all', 'string'], true, 'string', { 'ha' => 'sh' }, 3, 2.42],
-        message: 'Error while evaluating a Resource Statement',
+        valid:   [[], ['array'], ['array', 'with', 'many', 'strings']],
+        invalid: [true, 'string', { 'ha' => 'sh' }, 3, 2.42],
+        message: 'expects an Array value',
       },
       'Pattern[/^\d+(m|g)$/]' => {
         name:    ['memory_size'],

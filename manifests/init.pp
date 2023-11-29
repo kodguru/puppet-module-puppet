@@ -69,19 +69,16 @@ class puppet (
   Hash                 $custom_settings      = {},
 ) {
   if $run_every_thirty == true {
-    $cron_run_one = fqdn_rand(30)
-    $cron_run_two = fqdn_rand(30) + 30
-    $cron_minute  = [$cron_run_one, $cron_run_two]
-    $cron_ensure  = 'present'
+    $cron_minute = [fqdn_rand(30), fqdn_rand(30) + 30]
+    $cron_ensure = 'present'
   } else {
-    $cron_ensure = 'absent'
     $cron_minute = undef
+    $cron_ensure = 'absent'
   }
 
-  if $run_in_noop == true {
-    $cron_command_real = "${cron_command} --noop"
-  } else {
-    $cron_command_real = $cron_command
+  $cron_command_real = $run_in_noop ? {
+    true    => "${cron_command} --noop",
+    default => $cron_command,
   }
 
   cron { 'puppet_agent_every_thirty':
@@ -92,10 +89,9 @@ class puppet (
     minute  => $cron_minute,
   }
 
-  if $run_at_boot == true {
-    $at_boot_ensure = 'present'
-  } else {
-    $at_boot_ensure = 'absent'
+  $at_boot_ensure = $run_at_boot ? {
+    true    => 'present',
+    default => 'absent',
   }
 
   cron { 'puppet_agent_once_at_boot':
