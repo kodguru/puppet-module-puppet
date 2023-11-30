@@ -1,6 +1,6 @@
 {
   "name": "kodguru-puppet",
-  "version": "4.0.0-forked",
+  "version": "4.0.1-forked",
   "author": "kodguru",
   "summary": "Manages Puppet agent and puppetserver",
   "license": "Apache-2.0",
